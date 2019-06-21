@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import pDelay from 'delay';
-import IpfsBlob from '../src/component';
+import IpfsFileUrl from '../src/component';
 import ipfs from './util/mock-ipfs';
 import hideGlobalErrors from './util/hide-global-errors';
 
@@ -18,9 +18,9 @@ it('should return the correct status and value when fullfilled', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="png" ipfs={ ipfs }>
+        <IpfsFileUrl path="png" ipfs={ ipfs }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -34,9 +34,9 @@ it('should return the correct status and value when rejected', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="error" ipfs={ ipfs }>
+        <IpfsFileUrl path="error" ipfs={ ipfs }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -51,13 +51,13 @@ it('should pass options to the hook', async () => {
     const error = new Error('Promise timed out after 10 milliseconds');
 
     render(
-        <IpfsBlob
+        <IpfsFileUrl
             path="foo"
             ipfs={ ipfs }
             timeout={ 10 }
             statusMap={ { pending: 'loading', rejected: 'error' } }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(20);
@@ -71,9 +71,9 @@ it('should behave correctly if path changes', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     const { rerender } = render(
-        <IpfsBlob path="png" ipfs={ ipfs }>
+        <IpfsFileUrl path="png" ipfs={ ipfs }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -84,9 +84,9 @@ it('should behave correctly if path changes', async () => {
     childrenFn.mockClear();
 
     rerender(
-        <IpfsBlob path="gif" ipfs={ ipfs }>
+        <IpfsFileUrl path="gif" ipfs={ ipfs }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);

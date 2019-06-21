@@ -62,7 +62,7 @@ const unloadFileUrl = (path, options) => {
     }
 };
 
-const useIpfsBlob = (ipfs, path, options) => {
+const useIpfsFileUrl = (ipfs, path, options) => {
     options = useMemo(() => ({
         timeout: 3 * 60000,
         infuraTimeout: 15000,
@@ -90,4 +90,4 @@ const useIpfsBlob = (ipfs, path, options) => {
     return usePromiseState(promiseRef.current, options);
 };
 
-export default useIpfsBlob;
+export default useIpfsFileUrl;

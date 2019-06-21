@@ -1,12 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import pDelay from 'delay';
-import useIpfsBlob, { cache } from '../src/hook';
+import useIpfsFileUrl, { cache } from '../src/hook';
 import ipfs from './util/mock-ipfs';
 import hideGlobalErrors from './util/hide-global-errors';
 
-const IpfsBlob = ({ path, children, ...options }) => {
-    const promiseState = useIpfsBlob(ipfs, path, options);
+const IpfsFileUrl = ({ path, children, ...options }) => {
+    const promiseState = useIpfsFileUrl(ipfs, path, options);
 
     return children(promiseState);
 };
@@ -25,9 +25,9 @@ it('should return the correct status and value when fullfilled', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="png">
+        <IpfsFileUrl path="png">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -41,9 +41,9 @@ it('should return the correct status and value when rejected', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="error">
+        <IpfsFileUrl path="error">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -57,9 +57,9 @@ it('should remaining pending if it\'s taking too long (timeout = 0)', async () =
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="foo" timeout={ 0 }>
+        <IpfsFileUrl path="foo" timeout={ 0 }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -72,9 +72,9 @@ it('should remaining pending if it\'s taking too long (timeout = Infinity)', asy
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="foo" timeout={ Infinity }>
+        <IpfsFileUrl path="foo" timeout={ Infinity }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -88,9 +88,9 @@ it('should timeout if it\'s taking too long', async () => {
     const error = new Error('Promise timed out after 10 milliseconds');
 
     render(
-        <IpfsBlob path="foo" timeout={ 10 }>
+        <IpfsFileUrl path="foo" timeout={ 10 }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(20);
@@ -104,9 +104,9 @@ it('should pass options to react-promiseful', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     render(
-        <IpfsBlob path="png" statusMap={ { pending: 'loading', fulfilled: 'success' } }>
+        <IpfsFileUrl path="png" statusMap={ { pending: 'loading', fulfilled: 'success' } }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -120,9 +120,9 @@ it('should behave correctly if path changes', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     const { rerender } = render(
-        <IpfsBlob path="png">
+        <IpfsFileUrl path="png">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -133,9 +133,9 @@ it('should behave correctly if path changes', async () => {
     childrenFn.mockClear();
 
     rerender(
-        <IpfsBlob path="gif">
+        <IpfsFileUrl path="gif">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -150,9 +150,9 @@ it('should behave correctly if path changes (infligh)', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     const { rerender } = render(
-        <IpfsBlob path="png">
+        <IpfsFileUrl path="png">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     expect(childrenFn).toHaveBeenCalledTimes(1);
@@ -160,9 +160,9 @@ it('should behave correctly if path changes (infligh)', async () => {
     childrenFn.mockClear();
 
     rerender(
-        <IpfsBlob path="gif">
+        <IpfsFileUrl path="gif">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -176,9 +176,9 @@ it('should behave correctly if path changes (infligh with error)', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     const { rerender } = render(
-        <IpfsBlob path="error">
+        <IpfsFileUrl path="error">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     expect(childrenFn).toHaveBeenCalledTimes(1);
@@ -186,9 +186,9 @@ it('should behave correctly if path changes (infligh with error)', async () => {
     childrenFn.mockClear();
 
     rerender(
-        <IpfsBlob path="png">
+        <IpfsFileUrl path="png">
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -202,9 +202,9 @@ it('should revoke object url on unmount', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
 
     const { unmount } = render(
-        <IpfsBlob path="png" disposeDelayMs={ 10 }>
+        <IpfsFileUrl path="png" disposeDelayMs={ 10 }>
             { childrenFn }
-        </IpfsBlob>
+        </IpfsFileUrl>
     );
 
     await pDelay(10);
@@ -222,12 +222,12 @@ it('should not revoke object url on unmount if more components are using the sam
 
     const { rerender } = render(
         <>
-            <IpfsBlob path="png" disposeDelayMs={ 10 }>
+            <IpfsFileUrl path="png" disposeDelayMs={ 10 }>
                 { childrenFn }
-            </IpfsBlob>
-            <IpfsBlob path="png" disposeDelayMs={ 10 }>
+            </IpfsFileUrl>
+            <IpfsFileUrl path="png" disposeDelayMs={ 10 }>
                 { childrenFn }
-            </IpfsBlob>
+            </IpfsFileUrl>
         </>
     );
 
@@ -235,9 +235,9 @@ it('should not revoke object url on unmount if more components are using the sam
 
     rerender(
         <>
-            <IpfsBlob path="png" disposeDelayMs={ 10 }>
+            <IpfsFileUrl path="png" disposeDelayMs={ 10 }>
                 { childrenFn }
-            </IpfsBlob>
+            </IpfsFileUrl>
         </>
     );
 

@@ -49,16 +49,16 @@ const SomeComponent = () => (
 );
 ```
 
-**With `useIpfsUrl()` hook**:
+**With `useIpfsFileUrl()` hook**:
 
 ```js
 import React from 'react';
-import { useIpfsUrl } from 'react-ipfs-url';
+import { useIpfsFileUrl } from 'react-ipfs-url';
 
 const ipfs = /* your ipfs node, perhaps provide it via context */;
 
 const SomeComponent = () => {
-    const [urlStatus, urlValue] = useIpfsUrl(ipfs, '/ipfs/QmQuMzeovz..');
+    const [urlStatus, urlValue] = useIpfsFileUrl(ipfs, '/ipfs/QmQuMzeovz..');
 
     return (
         <>
@@ -73,7 +73,7 @@ const SomeComponent = () => {
 ## API
 
 - [`<IpfsFileUrl>`](#ipfsfileurl)
-- [`useIpfsUrl(ipfs, path, [options])`](#useiofsurlipfspath-options)
+- [`useIpfsFileUrl(ipfs, path, [options])`](#useiofsurlipfspath-options)
 
 ### IpfsFileUrl
 
@@ -137,12 +137,12 @@ The `state` argument is an object that contains the following properties:
 See [react-promiseful](https://github.com/moxystudio/react-promiseful) for more info.
 
 
-### useIpfsUrl(ipfs, path, [options])
+### useIpfsFileUrl(ipfs, path, [options])
 
 The hook version of the `<IpfsFileUrl>` component. The `options` available to both are exactly the same.
 
 ```js
-const promiseState = useIpfsUrl(somePromise);
+const promiseState = useIpfsFileUrl(somePromise);
 ```
 
 The returned value from the hook is the promise state, an object that contains the following properties:
