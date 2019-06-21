@@ -18,7 +18,8 @@
     "object-url",
     "infura",
     "blob",
-    "promiseful"
+    "promiseful",
+    "hook"
   ],
   "bugs": {
     "url": "https://github.com/ipfs-shipyard/react-ipfs-url/issues"
