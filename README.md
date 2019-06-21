@@ -73,7 +73,7 @@ const SomeComponent = () => {
 ## API
 
 - [`<IpfsFileUrl>`](#ipfsfileurl)
-- [`useIpfsFileUrl(ipfs, path, [options])`](#useiofsurlipfspath-options)
+- [`useIpfsFileUrl(ipfs, path, [options])`](#useipfsfileurlipfs-path-options)
 
 ### IpfsFileUrl
 
