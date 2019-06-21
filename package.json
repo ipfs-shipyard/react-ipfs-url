@@ -1,0 +1,99 @@
+{
+  "name": "react-ipfs-url",
+  "version": "0.0.0",
+  "description": "Grab a URL from a IPFS path by using URL.createObjectUrl",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "homepage": "https://github.com/ipfs-shipyard/react-ipfs-url#readme",
+  "author": "André Cruz <andre@moxy.studio>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipfs-shipyard/react-ipfs-url.git"
+  },
+  "keywords": [
+    "react",
+    "ipfs",
+    "url",
+    "object-url",
+    "infura",
+    "blob",
+    "promiseful"
+  ],
+  "bugs": {
+    "url": "https://github.com/ipfs-shipyard/react-ipfs-url/issues"
+  },
+  "files": [
+    "lib",
+    "es"
+  ],
+  "scripts": {
+    "build:commonjs": "BABEL_ENV=commonjs babel src -d lib --delete-dir-on-start",
+    "build:es": "BABEL_ENV=es babel src -d es --delete-dir-on-start",
+    "build": "npm run build:commonjs && npm run build:es",
+    "test": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore .",
+    "prerelease": "npm t && npm run lint && npm run build",
+    "release": "standard-version"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./test/setup",
+      "@testing-library/react/cleanup-after-each"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "standard-version": {
+    "scripts": {
+      "posttag": "git push --follow-tags origin master"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "ipfs": "^0.36.0"
+  },
+  "dependencies": {
+    "delay": "^4.3.0",
+    "file-type": "^12.0.0",
+    "p-timeout": "^3.1.0",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.8.0",
+    "react-promiseful": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@commitlint/config-conventional": "^8.0.0",
+    "@testing-library/react": "^8.0.1",
+    "babel-jest": "^24.5.0",
+    "babel-preset-moxy": "^3.1.0",
+    "commitlint": "^8.0.0",
+    "eslint": "^5.13.0",
+    "eslint-config-moxy": "^7.1.0",
+    "husky": "^2.4.1",
+    "jest": "^24.5.0",
+    "lint-staged": "^8.2.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "standard-version": "^6.0.1"
+  }
+}
