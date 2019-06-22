@@ -105,8 +105,9 @@ Default: `input-first`
 
 The strategy to use when resolving a valid URL.
 
-- `input-first`: Use the provider associated with the `input` first and fallback to resolving with IPFS
+- `input-first`: Use the provider associated with the `input` first and fallback to resolving with IPFS.
 - `ipfs-first`: Use IPFS to resolve the URL first and fallback to resolving with the provider associated with the `input`
+- `ipfs-offline-first`: Use offline IPFS first and fallback to resolving with the provider, followed by the online IPFS.
 - `ipfs-only`: Only use IPFS to resolve the URL, even if `input` comes from another provider
 - `ipfs-offline-only`: Only use IPFS (offline) to resolve the URL, even if `input` comes from another provider
 

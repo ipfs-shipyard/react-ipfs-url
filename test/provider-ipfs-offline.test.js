@@ -27,7 +27,7 @@ describe('check', () => {
         await ipfsOfflineProvider.check('/ipfs/png', '/ipfs/png', ipfs).catch(() => {});
 
         expect(ipfs._repo.blocks.get).toHaveBeenCalledTimes(1);
-        expect(ipfs._repo.blocks.get.mock.calls[0][0]).toBe('png');
+        expect(ipfs._repo.blocks.get.mock.calls[0][0].toString()).toBe('png');
     });
 
     it('should return true if repo block exists', async () => {

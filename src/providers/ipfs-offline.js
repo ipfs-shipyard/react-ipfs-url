@@ -1,4 +1,5 @@
 import pify from 'pify';
+import CID from 'cids';
 import ipfsProvider from './ipfs';
 
 export default {
@@ -16,7 +17,9 @@ export default {
         let block;
 
         try {
-            block = await pify(ipfs._repo.blocks.get)(hash);
+            const cid = new CID(hash);
+
+            block = await pify(ipfs._repo.blocks.get)(cid);
         } catch (err) {
             if (err.code === 'ERR_NOT_FOUND') {
                 return false;

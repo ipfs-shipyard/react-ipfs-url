@@ -39,7 +39,7 @@ it('should return the correct status and value when fulfilled', async () => {
 
 it('should return the correct status and value when rejected', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
-    const error = new Error('None of following providers were able to check for "/ipfs/error": ipfs, ipfsOffline');
+    const error = new Error('None of following providers successfully checked "/ipfs/error": ipfs, ipfsOffline');
 
     render(
         <IpfsUrl input="/ipfs/error">
@@ -55,8 +55,8 @@ it('should return the correct status and value when rejected', async () => {
 
     const subErrors = childrenFn.mock.calls[1][0].value.errors;
 
-    expect(subErrors).toHaveLength(1);
-    expect(subErrors[0]).toEqual(new Error('error'));
+    expect(subErrors).toBeTruthy();
+    expect(subErrors.ipfsOffline).toEqual(new Error('error'));
 });
 
 it('should remain pending if it\'s taking too long', async () => {
@@ -76,7 +76,7 @@ it('should remain pending if it\'s taking too long', async () => {
 
 it('should timeout if it\'s taking too long', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
-    const error = new Error('None of following providers were able to check for "/ipfs/foo": ipfs, ipfsOffline');
+    const error = new Error('None of following providers successfully checked "/ipfs/foo": ipfs, ipfsOffline');
 
     render(
         <IpfsUrl input="/ipfs/foo" checkTimeout={ { ipfs: 10, ipfsOffline: 10 } }>

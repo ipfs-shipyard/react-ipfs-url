@@ -1,5 +1,6 @@
 import pTimeout from 'p-timeout';
 import pLocate from 'p-locate';
+import { size } from 'lodash';
 import * as providers from './providers';
 
 const providersArray = Object.values(providers);
@@ -25,6 +26,9 @@ export const createFileUrl = async (ipfs, input, options) => {
     case 'ipfs-first':
         order = new Set([providers.ipfsOffline, providers.ipfs, originProvider]);
         break;
+    case 'ipfs-offline-first':
+        order = new Set([providers.ipfsOffline, originProvider, providers.ipfs]);
+        break;
     case 'ipfs-only':
         order = new Set([providers.ipfsOffline, providers.ipfs]);
         break;
@@ -36,15 +40,24 @@ export const createFileUrl = async (ipfs, input, options) => {
         order = new Set([originProvider, providers.ipfsOffline, providers.ipfs]);
     }
 
-    const errors = [];
+    const errors = {};
 
-    const provider = await pLocate(order, async (provider) => (
-        pTimeout(
-            provider.check(input, ipfsPath, ipfs).catch((err) => errors.push(err)),
+    const provider = await pLocate(order, (provider) => {
+        const promise = provider.check(input, ipfsPath, ipfs)
+        .catch((err) => {
+            errors[provider.name] = err;
+        });
+
+        return pTimeout(
+            promise,
             options.checkTimeout[provider.name],
             () => null,
-        )
-    ));
+        );
+    });
+
+    if (size(errors)) {
+        console.warn(`Some errors ocurred while checking for "${ipfsPath}"`, errors);
+    }
 
     if (!provider) {
         const names = Array.from(order)
@@ -52,7 +65,7 @@ export const createFileUrl = async (ipfs, input, options) => {
         .join(', ');
 
         throw Object.assign(
-            new Error(`None of following providers were able to check for "${ipfsPath}": ${names}`),
+            new Error(`None of following providers successfully checked "${ipfsPath}": ${names}`),
             { errors }
         );
     }

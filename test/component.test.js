@@ -32,7 +32,7 @@ it('should return the correct status and value when fulfilled', async () => {
 
 it('should return the correct status and value when rejected', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
-    const error = new Error('None of following providers were able to check for "/ipfs/error": ipfs, ipfsOffline');
+    const error = new Error('None of following providers successfully checked "/ipfs/error": ipfs, ipfsOffline');
 
     render(
         <IpfsUrl input="/ipfs/error" ipfs={ ipfs }>
@@ -49,7 +49,7 @@ it('should return the correct status and value when rejected', async () => {
 
 it('should pass options to the hook', async () => {
     const childrenFn = jest.fn(() => <div>foo</div>);
-    const error = new Error('None of following providers were able to check for "/ipfs/foo": ipfs, ipfsOffline');
+    const error = new Error('None of following providers successfully checked "/ipfs/foo": ipfs, ipfsOffline');
 
     render(
         <IpfsUrl

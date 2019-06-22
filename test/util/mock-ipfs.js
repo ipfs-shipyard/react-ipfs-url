@@ -6,14 +6,14 @@ const paths = {
 const ipfs = {
     _repo: {
         blocks: {
-            get: jest.fn((key, callback) => {
-                const path = `/ipfs/${key}`;
+            get: jest.fn((cid, callback) => {
+                const path = `/ipfs/${cid.toString()}`;
 
                 if (paths[path]) {
                     return callback(null, paths[path]);
                 }
 
-                if (key === 'error') {
+                if (path === '/ipfs/error') {
                     return callback(new Error('error'));
                 }
 
@@ -35,7 +35,7 @@ const ipfs = {
                 ];
             }
 
-            if (key === 'error') {
+            if (path === '/ipfs/error') {
                 throw new Error('error');
             }
 
