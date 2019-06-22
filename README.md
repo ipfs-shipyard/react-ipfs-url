@@ -95,7 +95,8 @@ Type: `string`
 
 A valid IPFS path, hash or a provider URL, such as a gateway URL or an Infura URL.
 
-> ⚠️ At the moment, IPNS paths are not supported for the `ipfs` and `ipfs-local` providers: https://github.com/ipfs-shipyard/react-ipfs-url/issues/2
+> ⚠️ At the moment, IPNS paths are not supported for the `ipfs` and `ipfsOffline` providers: https://github.com/ipfs-shipyard/react-ipfs-url/issues/2
+
 > ⚠️ There's no support for fully qualified domains URLs yet: https://github.com/ipfs-shipyard/react-ipfs-url/issues/4
 
 ##### stategy
