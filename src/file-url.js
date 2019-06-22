@@ -14,11 +14,21 @@ const parseInput = (input) => {
         return !!ipfsPath;
     });
 
+    if (!originProvider) {
+        return;
+    }
+
     return { ipfsPath, originProvider };
 };
 
 export const createFileUrl = async (ipfs, input, options) => {
-    const { ipfsPath, originProvider } = parseInput(input);
+    const parsed = parseInput(input);
+
+    if (!parsed) {
+        return input;
+    }
+
+    const { ipfsPath, originProvider } = parsed;
 
     let order;
 
