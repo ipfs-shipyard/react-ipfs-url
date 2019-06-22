@@ -150,10 +150,10 @@ See [react-promiseful](https://github.com/moxystudio/react-promiseful) for more 
 The hook version of the `<IpfsUrl>` component. The `options` available to both are exactly the same.
 
 ```js
-const promiseState = useIpfsUrl(somePromise);
+const urlState = useIpfsUrl(ipfs, '/ipfs/QmQuMzeovz..');
 ```
 
-The returned value from the hook is the promise state, an object that contains the following properties:
+The returned value from the hook is the url promise state, an object that contains the following properties:
 
 - `status` is one of `none` (when there's no promise), `pending`, `rejected`, `fulfilled`
 - `value` is either the fulfillment value (url) or the rejection value
