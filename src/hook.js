@@ -1,11 +1,12 @@
+import { merge } from 'lodash';
 import { useMemo, useRef, useEffect } from 'react';
 import { usePromiseState } from 'react-promiseful';
-import { getFileUrl, isFileUrlDisposable, disposeFileUrl } from './utils/file-url';
+import { createFileUrl, isFileUrlDisposable, disposeFileUrl } from './file-url';
 
 export const cache = new Map();
 
-const loadFileUrl = (ipfs, path, options) => {
-    let entry = cache.get(path);
+const loadFileUrl = (ipfs, input, options) => {
+    let entry = cache.get(input);
 
     if (entry) {
         entry.refCount += 1;
@@ -14,18 +15,19 @@ const loadFileUrl = (ipfs, path, options) => {
         return entry.promise;
     }
 
-    const promise = getFileUrl(ipfs, path, options)
+    const promise = createFileUrl(ipfs, input, options)
     .then((fileUrl) => {
-        if (cache.get(path) === entry) {
+        if (cache.get(input) === entry) {
             entry.fileUrl = fileUrl;
+        }
 
-            return fileUrl.value;
-        }
+        return fileUrl.value;
     }, (err) => {
-        if (cache.get(path) === entry) {
-            cache.delete(path);
-            throw err;
+        if (cache.get(input) === entry) {
+            cache.delete(input);
         }
+
+        throw err;
     });
 
     entry = {
@@ -35,7 +37,7 @@ const loadFileUrl = (ipfs, path, options) => {
         revokeTimeoutId: undefined,
     };
 
-    cache.set(path, entry);
+    cache.set(input, entry);
 
     return promise;
 };
@@ -56,38 +58,41 @@ const unloadFileUrl = (path, options) => {
     if (entry.fileUrl && isFileUrlDisposable(entry.fileUrl)) {
         entry.revokeTimeoutId = setTimeout(() => {
             disposeFileUrl(entry.fileUrl);
+            cache.delete(path);
         }, options.disposeDelayMs);
     } else {
         cache.delete(path);
     }
 };
 
-const useIpfsFileUrl = (ipfs, path, options) => {
-    options = useMemo(() => ({
-        timeout: 3 * 60000,
-        infuraTimeout: 15000,
+const useIpfsUrl = (ipfs, input, options) => {
+    options = useMemo(() => merge({
+        strategy: 'input-first',
+        checkTimeout: {
+            gateway: 12500,
+            infura: 12500,
+            ipfsOffline: 5000,
+            ipfs: 180000,
+        },
         disposeDelayMs: 60000,
-        ...options,
-    }), [options]);
+    }, options), [options]);
 
     const pathRef = useRef();
     const promiseRef = useRef();
     const optionsRef = useRef(options);
 
-    optionsRef.current = options;
-
     // Fetch file if path has changed
-    if (pathRef.current !== path) {
-        pathRef.current = path;
-        promiseRef.current = loadFileUrl(ipfs, path, options);
+    if (pathRef.current !== input) {
+        pathRef.current = input;
+        promiseRef.current = loadFileUrl(ipfs, input, options);
     }
 
     // Dispose previous file whenever it changes, including on unmount
     useEffect(() => () => {
-        unloadFileUrl(path, optionsRef.current);
-    }, [path]);
+        unloadFileUrl(input, optionsRef.current);
+    }, [input]);
 
     return usePromiseState(promiseRef.current, options);
 };
 
-export default useIpfsFileUrl;
+export default useIpfsUrl;

@@ -1,2 +1,2 @@
-export { default as IpfsFileUrl } from './component';
-export { default as useIpfsFileUrl } from './hook';
+export { default as IpfsUrl } from './component';
+export { default as useIpfsUrl } from './hook';

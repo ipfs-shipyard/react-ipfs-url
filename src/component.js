@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import useIpfsBlob from './hook';
+import useIpfsUrl from './hook';
 
-const IpfsBlob = ({ ipfs, path, children, ...options }) => {
-    const promiseState = useIpfsBlob(ipfs, path, options);
+const IpfsUrl = ({ ipfs, input, children, ...options }) => {
+    const promiseState = useIpfsUrl(ipfs, input, options);
     const renderedChildren = useMemo(() => children(promiseState), [children, promiseState]);
 
     return renderedChildren;
 };
 
-export default IpfsBlob;
+export default IpfsUrl;

@@ -1,10 +1,49 @@
 const paths = {
-    png: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64'),
-    gif: Buffer.from('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', 'base64'),
+    '/ipfs/png': Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64'),
+    '/ipfs/gif': Buffer.from('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==', 'base64'),
 };
 
 const ipfs = {
-    get: async (path) => {
+    _repo: {
+        blocks: {
+            get: jest.fn((key, callback) => {
+                const path = `/ipfs/${key}`;
+
+                if (paths[path]) {
+                    return callback(null, paths[path]);
+                }
+
+                if (key === 'error') {
+                    return callback(new Error('error'));
+                }
+
+                return callback(Object.assign(new Error('Not found'), { code: 'ERR_NOT_FOUND' }));
+            }),
+        },
+    },
+
+    block: {
+        stat: jest.fn(async (key) => {
+            const path = `/ipfs/${key}`;
+
+            if (paths[path]) {
+                return [
+                    {
+                        key,
+                        size: paths[path].length,
+                    },
+                ];
+            }
+
+            if (key === 'error') {
+                throw new Error('error');
+            }
+
+            return new Promise(() => {});
+        }),
+    },
+
+    get: jest.fn(async (path) => {
         if (paths[path]) {
             return [
                 {
@@ -14,12 +53,12 @@ const ipfs = {
             ];
         }
 
-        if (path === 'error') {
+        if (path === '/ipfs/error') {
             throw new Error('error');
         }
 
         return new Promise(() => {});
-    },
+    }),
 };
 
 export default ipfs;

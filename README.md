@@ -28,16 +28,16 @@ This library is written in modern JavaScript and is published in both CommonJS a
 
 ## Usage
 
-**With `<IpfsFileUrl>` component**:
+**With `<IpfsUrl>` component**:
 
 ```js
 import React from 'react';
-import { IpfsFileUrl } from 'react-ipfs-url';
+import { IpfsUrl } from 'react-ipfs-url';
 
 const ipfs = /* your ipfs node, perhaps provide it via context */;
 
 const SomeComponent = () => (
-    <IpfsFileUrl ipfs={ ipfs } path="/ipfs/QmQuMzeovz...">
+    <IpfsUrl ipfs={ ipfs } path="/ipfs/QmQuMzeovz...">
         { ({ status, value }) => (
             <>
                 { status === 'pending' && 'Loading...' }
@@ -45,43 +45,43 @@ const SomeComponent = () => (
                 { status === 'fulfilled' && <img src={ value } alt="" /> }
             <>
         ) }
-    </IpfsFileUrl>
+    </IpfsUrl>
 );
 ```
 
-**With `useIpfsFileUrl()` hook**:
+**With `useIpfsUrl()` hook**:
 
 ```js
 import React from 'react';
-import { useIpfsFileUrl } from 'react-ipfs-url';
+import { useIpfsUrl } from 'react-ipfs-url';
 
 const ipfs = /* your ipfs node, perhaps provide it via context */;
 
 const SomeComponent = () => {
-    const [urlStatus, urlValue] = useIpfsFileUrl(ipfs, '/ipfs/QmQuMzeovz..');
+    const [urlStatus, urlValue] = useIpfsUrl(ipfs, '/ipfs/QmQuMzeovz..');
 
     return (
         <>
             { status === 'pending' && 'Loading...' }
             { status === 'rejected' && 'Oops, failed to load' }
             { status === 'fulfilled' && <img src={ value } alt="" /> }
-        <>
+        </>
     );
 };
 ```
 
 ## API
 
-- [`<IpfsFileUrl>`](#ipfsfileurl)
-- [`useIpfsFileUrl(ipfs, path, [options])`](#useipfsfileurlipfs-path-options)
+- [`<IpfsUrl>`](#ipfsurl)
+- [`useIpfsUrl(ipfs, path, [options])`](#useipfsurlipfs-path-options)
 
-### IpfsFileUrl
+### IpfsUrl
 
-The `<IpfsFileUrl>` component allows you to conditionally render children based on the url status and fulfillment/rejection value. It leverages the [render props](https://reactjs.org/docs/render-props.html) technique to know what to render.
+The `<IpfsUrl>` component allows you to conditionally render children based on the url status and fulfillment/rejection value. It leverages the [render props](https://reactjs.org/docs/render-props.html) technique to know what to render.
 
 #### Props
 
-All properties from[react-promiseful](https://github.com/moxystudio/react-promiseful) are also valid.
+All properties from [react-promiseful](https://github.com/moxystudio/react-promiseful) are also valid.
 
 ##### ipfs
 
@@ -89,34 +89,40 @@ Type: `object`
 
 The [ipfs](https://github.com/ipfs/js-ipfs) node to be used.
 
-##### path
+##### input
 
 Type: `string`
 
-The IPFS path to fetch and generate a URL from.
+A valid IPFS path, hash or a provider URL, such as a gateway URL or an Infura URL.
 
-Also accepts [infura](https://infura.io) URLs. If the file doesn't seem to exist in infura, fallbacks to fetching the file from your local `ipfs` node.
+> ⚠️ At the moment, IPNS paths are not supported for the `ipfs` and `ipfs-local` providers: https://github.com/ipfs-shipyard/react-ipfs-url/issues/2
+> ⚠️ There's no support for fully qualified domains URLs yet: https://github.com/ipfs-shipyard/react-ipfs-url/issues/4
 
-##### timeout
+##### stategy
 
-Type: `number`   
-Default: 180000
+Type: `string`   
+Default: `input-first`
 
-The max time to wait for `ipfs.get()`.
+The strategy to use when resolving a valid URL.
 
-##### infuraTimeout
+- `input-first`: Use the provider associated with the `input` first and fallback to resolving with IPFS
+- `ipfs-first`: Use IPFS to resolve the URL first and fallback to resolving with the provider associated with the `input`
+- `ipfs-only`: Only use IPFS to resolve the URL, even if `input` comes from another provider
+- `ipfs-offline-only`: Only use IPFS (offline) to resolve the URL, even if `input` comes from another provider
 
-Type: `number`   
-Default: 15000
+##### checkTimeout
 
-The max time to spend checking if the file is available in infura, in case `path` is an [infura](https://infura.io) URL.
+Type: `object`   
+Default: `{ gateway: 12500, infura: 12500, ipfsOffline: 5000, ipfs: 180000 }`
+
+The max time to spend checking for the existence of the content on providers.
 
 ##### disposeDelayMs
 
 Type: `number`   
 Default: 60000
 
-The delay in which object urls created with `URL.createObjectURL` are revoked when they are no longer used. 
+The delay in which object urls created with `URL.createObjectURL` are revoked when they are no longer used.
 
 ##### children
 
@@ -132,24 +138,24 @@ The `state` argument is an object that contains the following properties:
 
 - `status` is one of `none` (when there's no promise), `pending`, `rejected`, `fulfilled`
 - `value` is either the fulfillment value (url) or the rejection value
-- `withinThreshold` indicating if we are still within the configured [`thresholdMs`](#thresholdms)
+- `withinThreshold` indicating if we are still within the configured [`thresholdMs`](https://github.com/moxystudio/react-promiseful#thresholdms)
 
 See [react-promiseful](https://github.com/moxystudio/react-promiseful) for more info.
 
 
-### useIpfsFileUrl(ipfs, path, [options])
+### useIpfsUrl(ipfs, path, [options])
 
-The hook version of the `<IpfsFileUrl>` component. The `options` available to both are exactly the same.
+The hook version of the `<IpfsUrl>` component. The `options` available to both are exactly the same.
 
 ```js
-const promiseState = useIpfsFileUrl(somePromise);
+const promiseState = useIpfsUrl(somePromise);
 ```
 
 The returned value from the hook is the promise state, an object that contains the following properties:
 
 - `status` is one of `none` (when there's no promise), `pending`, `rejected`, `fulfilled`
 - `value` is either the fulfillment value (url) or the rejection value
-- `withinThreshold` indicating if we are still within the configured [`thresholdMs`](#thresholdms)
+- `withinThreshold` indicating if we are still within the configured [`thresholdMs`](https://github.com/moxystudio/react-promiseful#thresholdms)
 
 See [react-promiseful](https://github.com/moxystudio/react-promiseful) for more info.
 

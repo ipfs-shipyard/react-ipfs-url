@@ -1,9 +1,9 @@
-import { IpfsFileUrl, useIpfsFileUrl } from '../src';
+import { IpfsUrl, useIpfsUrl } from '../src';
 
-it('should export <IpfsFileUrl>', () => {
-    expect(typeof IpfsFileUrl).toBe('function');
+it('should export <IpfsUrl>', () => {
+    expect(typeof IpfsUrl).toBe('function');
 });
 
-it('should export <useIpfsFileUrl>', () => {
-    expect(typeof useIpfsFileUrl).toBe('function');
+it('should export <useIpfsUrl>', () => {
+    expect(typeof useIpfsUrl).toBe('function');
 });
