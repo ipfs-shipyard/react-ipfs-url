@@ -45,6 +45,12 @@ describe('check', () => {
     it('should return false for IPNS paths', async () => {
         await expect(ipfsOfflineProvider.check('https://ipfs.io/ipns/yyy', '/ipns/yyy', ipfs)).resolves.toBe(false);
     });
+
+    it('should return false if there\'s no repo', async () => {
+        const ipfs = {};
+
+        await expect(ipfsOfflineProvider.check('https://ipfs.io/ipfs/foo', '/ipfs/foo', ipfs)).resolves.toBe(false);
+    });
 });
 
 describe('createUrl', () => {

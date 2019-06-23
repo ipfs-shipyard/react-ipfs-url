@@ -14,6 +14,10 @@ export default {
             return false;
         }
 
+        if (!ipfs._repo) {
+            return false;
+        }
+
         let block;
 
         try {
