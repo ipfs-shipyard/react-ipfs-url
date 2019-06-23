@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/ipfs-shipyard/react-ipfs-url/compare/v0.2.1...v0.2.2) (2019-06-23)
+
+
+### Bug Fixes
+
+* fix ipfs not being a js-ipfs instance ([8bbc718](https://github.com/ipfs-shipyard/react-ipfs-url/commit/8bbc718))
+* use p-one instead of p-locate due to concurrency ([3ba49fe](https://github.com/ipfs-shipyard/react-ipfs-url/commit/3ba49fe))
+
+
+
 ### [0.2.1](https://github.com/ipfs-shipyard/react-ipfs-url/compare/v0.2.0...v0.2.1) (2019-06-22)
 
 

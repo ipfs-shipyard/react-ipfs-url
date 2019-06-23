@@ -1,6 +1,6 @@
 {
   "name": "react-ipfs-url",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Grab a URL from a IPFS path by using URL.createObjectUrl",
   "main": "lib/index.js",
   "module": "es/index.js",
