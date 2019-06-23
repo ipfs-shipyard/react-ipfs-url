@@ -42,8 +42,8 @@ const loadFileUrl = (ipfs, input, options) => {
     return promise;
 };
 
-const unloadFileUrl = (path, options) => {
-    const entry = cache.get(path);
+const unloadFileUrl = (input, options) => {
+    const entry = cache.get(input);
 
     if (!entry) {
         return;
@@ -58,10 +58,10 @@ const unloadFileUrl = (path, options) => {
     if (entry.fileUrl && isFileUrlDisposable(entry.fileUrl)) {
         entry.revokeTimeoutId = setTimeout(() => {
             disposeFileUrl(entry.fileUrl);
-            cache.delete(path);
+            cache.delete(input);
         }, options.disposeDelayMs);
     } else {
-        cache.delete(path);
+        cache.delete(input);
     }
 };
 

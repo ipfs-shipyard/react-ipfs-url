@@ -1,5 +1,5 @@
 import pTimeout from 'p-timeout';
-import pLocate from 'p-locate';
+import pOne from 'p-one';
 import { size } from 'lodash';
 import * as providers from './providers';
 
@@ -51,19 +51,28 @@ export const createFileUrl = async (ipfs, input, options) => {
     }
 
     const errors = {};
+    let provider;
 
-    const provider = await pLocate(order, (provider) => {
-        const promise = provider.check(input, ipfsPath, ipfs)
+    await pOne(order, async (candidate) => {
+        const promise = candidate.check(input, ipfsPath, ipfs)
         .catch((err) => {
-            errors[provider.name] = err;
+            errors[candidate.name] = err;
         });
 
-        return pTimeout(
+        const res = await pTimeout(
             promise,
-            options.checkTimeout[provider.name],
+            options.checkTimeout[candidate.name],
             () => null,
         );
-    });
+
+        if (!res) {
+            return false;
+        }
+
+        provider = candidate;
+
+        return true;
+    }, { concurrency: 1 });
 
     if (size(errors)) {
         console.warn(`Some errors ocurred while checking for "${ipfsPath}"`, errors);

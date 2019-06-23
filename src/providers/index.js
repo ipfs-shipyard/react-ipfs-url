@@ -3,4 +3,4 @@ import gateway from './gateway';
 import ipfs from './ipfs';
 import ipfsOffline from './ipfs-offline';
 
-export { infura, gateway, ipfs, ipfsOffline };
+export { infura, gateway, ipfsOffline, ipfs };
