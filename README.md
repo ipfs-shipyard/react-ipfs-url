@@ -37,7 +37,7 @@ import { IpfsUrl } from 'react-ipfs-url';
 const ipfs = /* your ipfs node, perhaps provide it via context */;
 
 const SomeComponent = () => (
-    <IpfsUrl ipfs={ ipfs } path="/ipfs/QmQuMzeovz...">
+    <IpfsUrl ipfs={ ipfs } input="/ipfs/QmQuMzeovz...">
         { ({ status, value }) => (
             <>
                 { status === 'pending' && 'Loading...' }
