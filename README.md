@@ -73,7 +73,7 @@ const SomeComponent = () => {
 ## API
 
 - [`<IpfsUrl>`](#ipfsurl)
-- [`useIpfsUrl(ipfs, path, [options])`](#useipfsurlipfs-path-options)
+- [`useIpfsUrl(ipfs, input, [options])`](#useipfsurlipfs-input-options)
 
 ### IpfsUrl
 
@@ -99,7 +99,7 @@ A valid IPFS path, hash or a provider URL, such as a gateway URL or an Infura UR
 
 > ⚠️ There's no support for fully qualified domains URLs yet: https://github.com/ipfs-shipyard/react-ipfs-url/issues/4
 
-##### stategy
+##### strategy
 
 Type: `string`   
 Default: `input-first`
@@ -145,7 +145,7 @@ The `state` argument is an object that contains the following properties:
 See [react-promiseful](https://github.com/moxystudio/react-promiseful) for more info.
 
 
-### useIpfsUrl(ipfs, path, [options])
+### useIpfsUrl(ipfs, input, [options])
 
 The hook version of the `<IpfsUrl>` component. The `options` available to both are exactly the same.
 
